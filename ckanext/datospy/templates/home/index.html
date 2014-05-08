@@ -1,0 +1,157 @@
+{% ckan_extends %}
+
+{% block content %}
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+{% resource 'ckanext-datospy/scripts/d3.layout.cloud.js' %}
+{% resource 'ckanext-datospy/scripts/tag-cloud.js' %}
+{% resource 'ckanext-datospy/scripts/homepage-slider.js' %}
+{% resource 'ckanext-datospy/scripts/homepage-feed.js' %}
+{% resource 'ckanext-datospy/styles/datospy.css' %}
+
+
+<div class="main homepage">
+    {{ self.primary_content() }}
+    <div class="container">
+        {{ self.secondary_content() }}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block primary_content %}
+
+{% set tags = h.get_facet_items_dict('tags', limit=20) %}
+
+<script type="text/javascript">
+   var tagList = {{ h.dump_json(tags)|safe }};
+   var frequencyList = tagList.map(function(t){
+        return {"text":t["display_name"], "size":t["count"]}
+   });
+</script>
+
+
+<div class="homepage-slider-ng">
+    <div class="images-wrapper">
+
+        <div class="text-wrapper" style="background-image:url(/images/home-slider/meteo_montagne.jpg)">
+            <div class="text-container">
+                <div><h3>{{ _("Cómo está el tiempo hoy en Asunción") }}</h3></div>
+                <div class="text-row">
+                    {{ _("todos los <a href=\"{link}\">conjuntos de datos climáticos</a>:").format(link='/group/cat-meteo')|safe }}
+                </div>
+                <div class="text-row">
+                    {{ _("pronósticos diarios, humedad, probabilidades de lluvia")|safe }}
+                </div>
+            </div>
+        </div>
+
+        <div class="text-wrapper"
+             style="background-image:url(/images/home-slider/prodotti_tipici_vigneto.jpg);display:none;">
+            <div class="text-container">
+                <div><h3>{{ _("ASU, FDO, LMB") }}</h3></div>
+                <div class="text-row">
+                    {{ _("un tour por las tradiciones de Paraguay") }}
+                </div>
+                <br>
+
+                <div class="text-row">
+                    <a href="/dataset?tags=prodotti+tipici">
+                        {{ _("Click aquí para descubrir más") }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-wrapper" style="background-image:url(/images/home-slider/partecipa_neve.jpg);display:none;">
+            <div class="text-container">
+                <div><h3>{{ _("Participa") }}</h3></div>
+                <div>
+          <span class="text-row">
+            {{ _("¿Hay algún conjunto de datos al que te gustaría acceder?") }}
+          </span>
+                </div>
+                <div>
+          <span class="text-row">
+            {{ _("Escribe a <a href=\"mailto:{email}\">{email}</a>").format(email='info&#64;datos.com.py')|safe }}
+          </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="overlapped_widgets" role="main">
+        <div class="container">
+            <div class="row row1">
+                <div class="span6 col1">
+                    {% snippet 'home/snippets/promoted.html' %}
+                </div>
+                <div class="span6 col2">
+                    {% snippet 'home/snippets/search.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block secondary_content %}
+<div class="container">{{ self.flash() }}</div>
+
+<div class="row group-listing" style="margin-top: 10px;">
+
+    {# ---------- Latest changes block ---------- #}
+    <div class="span6">
+        <div class="box">
+            <section class="group-list module module-narrow module-shallow" style="height: 300px;">
+                <header class="module-heading" style="position:relative;">
+                    <a href="/revision/list?format=atom" class="no-underline"
+                       style="position:absolute;top:15px;right:15px;" title="Atom Feed"><i class="icon-rss-sign icon-2x"
+                                                                                           style="color:#f90;"></i></a>
+
+                    <h3 class="media-heading">{{ _("Últimos cambios") }}</h3>
+                    {# <p>{{ _("Estos son los cambios más recientes sobre los conjuntos de datos.") }}</p> #}
+                </header>
+
+                <div id="latest-changes">
+                    <p style="padding: 15px;text-align:center;">
+                        <a href="/revision/list?format=atom" class="no-underline" style="color:#000;font-size:80px;"
+                           title="Atom Feed"><i class="icon-rss" style="color:#f90;font-size:80px;"></i> Feed</a>
+                    </p>
+                </div>
+
+            </section>
+        </div>
+    </div>
+
+    {# ---------- Twitter timeline box ---------- #}
+    <div class="span6">
+        <div class="box">
+            <section class="group-list module module-narrow module-shallow" style="height:300px">
+                <a class="twitter-timeline" href="https://twitter.com/rparrapy" data-widget-id="458635325376450560">Tweets
+                    por @rparrapy</a>
+                <script>
+                    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+                    if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
+                    fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+
+
+
+
+
+                </script>
+
+
+            </section>
+        </div>
+    </div>
+
+    <div id="tag-cloud"></div>
+
+</div>
+{% endblock %}
