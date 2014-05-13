@@ -27,5 +27,8 @@ setup(
         paraguay_theme=ckanext.datospy.theme:ParaguayThemePlugin
         paraguay_dataset = ckanext.datospy.dataset:ParaguayDatasetFormPlugin
         paraguay_resource = ckanext.datospy.resource:ParaguayResourceFormPlugin
+
+        [paste.paster_command]
+        translations=ckanext.datospy.translation:TranslationsCommand
     ''',
 )

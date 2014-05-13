@@ -56,6 +56,7 @@ function createCloud(data) {
       		}
 		)
 	)
+	.rotate(0)
     .font("Impact")
     .fontSize(function(d) { return d.size; })
     .on("end", draw)
