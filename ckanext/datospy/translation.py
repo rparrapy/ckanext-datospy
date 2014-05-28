@@ -1,5 +1,6 @@
 __author__ = 'Rodrigo Parra'
 
+import pylons.config as config
 from logging import getLogger
 from subprocess import Popen, PIPE
 import os
@@ -25,10 +26,8 @@ class TranslationsCommand(toolkit.CkanCommand):
     usage = __doc__
 
     CKAN_PO_FILE = '../ckan/ckan/i18n/{0}/LC_MESSAGES/ckan.po'
-    CKAN_MO_FILE = '/home/desa4/ckan.mo'
+    CKAN_MO_FILE = '{0}/i18n/{1}/LC_MESSAGES/ckan.mo'
     EXT_FILE = '../{0}/ckanext/{1}/i18n/{2}/LC_MESSAGES/{3}.po'
-
-    COMMAND = 'msgcat --use-first {0} | msgfmt --o {2}'
 
     def __init__(self, name):
         super(TranslationsCommand, self).__init__(name)
@@ -54,7 +53,6 @@ class TranslationsCommand(toolkit.CkanCommand):
 
 
     def _merge_files(self):
-        lang = self.options.lang
         parent_dir = os.path.join(os.getcwd(), os.pardir)
         extension_dirs = [name for name in os.listdir(parent_dir) if os.path.isdir(os.path.join(parent_dir, name))
                             and name.startswith('ckanext-')]
@@ -65,10 +63,14 @@ class TranslationsCommand(toolkit.CkanCommand):
             if file:
                 files.append(file)
 
-        msgcat = Popen(['msgcat', '--use-first'] +  files, stdout=PIPE)
-        msgfmt = Popen(['msgfmt', '-', '-o', self.CKAN_MO_FILE], stdin=msgcat.stdout, stdout=PIPE)
-        output = msgfmt.communicate()[0]
-        print 'Success'
+        dest_dir = config.get('ckan.i18n_directory')
+        if dest_dir:
+            output = self.CKAN_MO_FILE.format(dest_dir, self.options.lang)
+            print output
+            msgcat = Popen(['msgcat', '--use-first'] +  files, stdout=PIPE)
+            msgfmt = Popen(['msgfmt', '-', '-o', output], stdin=msgcat.stdout, stdout=PIPE)
+        else:
+            log.error('Config property "ckan.i18n_directory" not set.')
 
 
     def _get_file_path(self, dir):

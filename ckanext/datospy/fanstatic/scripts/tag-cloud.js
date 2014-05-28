@@ -63,4 +63,6 @@ function createCloud(data) {
 	.start();
 }
 
-createCloud(frequencyList);
+$(document).ready(function() {
+   createCloud(frequencyList);
+});

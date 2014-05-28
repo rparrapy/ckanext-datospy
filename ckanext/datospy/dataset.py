@@ -26,6 +26,7 @@ class ParaguayDatasetFormPlugin(plugins.SingletonPlugin,
     def get_helpers(self):
         return {
             'dpy_get_custom_fields': self._get_custom_fields,
+            'dpy_user_is_admin': self._user_is_admin
         }
 
     def _get_custom_fields(self):
@@ -77,10 +78,15 @@ class ParaguayDatasetFormPlugin(plugins.SingletonPlugin,
 
     def create(self, entity):
         log.debug('create')
+        log.debug(entity)
+        if not self._user_is_sysadmin():
+            entity.private = True
 
 
     def edit(self, entity):
-        log.debug('edit')
+        log.debug(entity)
+        if not self._user_is_admin(entity.owner_org):
+            entity.private = True
 
 
     def authz_add_role(self, object_role):
@@ -93,10 +99,10 @@ class ParaguayDatasetFormPlugin(plugins.SingletonPlugin,
         log.debug('delete')
 
     def after_create(self, context, pkg_dict):
-        log.debug('Creooooooo')
         return pkg_dict
 
     def after_update(self, context, pkg_dict):
+        pkg_dict['private'] = True
         return pkg_dict
 
     def after_delete(self, context, pkg_dict):
@@ -152,3 +158,26 @@ class ParaguayDatasetFormPlugin(plugins.SingletonPlugin,
 
     def before_view(self, pkg_dict):
         return  pkg_dict
+
+    ##############################################################################
+
+    def _user_is_admin(self, group_id):
+        user_id = toolkit.c.userobj.id
+        group_admins = toolkit.get_action('member_list')(
+            data_dict={'id': group_id, 'object_type': 'user', 'capacity': 'admin'})
+        user_is_group_admin = user_id in [user[0] for user in group_admins]
+        #log.debug('Is group admin?')
+        #log.debug(user_is_group_admin)
+        return user_is_group_admin or self._user_is_sysadmin()
+
+
+    def _user_is_sysadmin(self):
+        user = toolkit.c.user
+        user_is_sysadmin = True
+        try:
+            toolkit.check_access('sysadmin', {'user': user}, {})
+        except toolkit.NotAuthorized:
+            user_is_sysadmin = False
+        #log.debug('Is site admin?')
+        #log.debug(user_is_sysadmin)
+        return user_is_sysadmin

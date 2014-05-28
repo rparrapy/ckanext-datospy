@@ -1,18 +1,18 @@
-# Spanish translations for ckanext-datospy.
+# Translations template for ckanext-datospy.
 # Copyright (C) 2014 ORGANIZATION
 # This file is distributed under the same license as the ckanext-datospy
 # project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-datospy 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2014-05-19 10:46-0400\n"
-"PO-Revision-Date: 2014-05-19 11:10-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: es <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -220,8 +220,8 @@ msgstr ""
 
 #: ckanext/datospy/templates/package/snippets/resource_help.html:4
 msgid ""
-"Un recurso puede ser cualquier archivo o enlace a un archivo que contiene"
-" datos útiles."
+"Un recurso puede ser cualquier archivo o enlace a un archivo que contiene "
+"datos útiles."
 msgstr ""
 
 #: ckanext/datospy/templates/package/snippets/resource_help.html:9
@@ -237,9 +237,7 @@ msgid "Para cada campo del esquema, pueden definirse las siguientes propiedades:
 msgstr ""
 
 #: ckanext/datospy/templates/package/snippets/resource_help.html:16
-msgid ""
-"Estas propiedades (y sus valores) se definen de acuerdo a la "
-"especificación"
+msgid "Estas propiedades (y sus valores) se definen de acuerdo a la especificación"
 msgstr ""
 
 #: ckanext/datospy/templates/package/snippets/resource_help.html:17
